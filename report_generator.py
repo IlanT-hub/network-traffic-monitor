@@ -1,4 +1,4 @@
-"""Report generation module (2026 Edition)"""
+"""Report generation module"""
 
 import json
 import csv
@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 
 class ReportGenerator:
-    """Generates network analysis reports (2026 Edition)"""
+    """Generates network analysis reports"""
     
     def __init__(self) -> None:
         self.config = Config()
@@ -40,14 +40,14 @@ class ReportGenerator:
         return csv_content
     
     def generate_html(self, stats: Dict[str, Any]) -> str:
-        """Generate HTML report (2026 styled)"""
+        """Generate HTML report"""
         html = f"""
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Network Analysis Report 2026</title>
+    <title>Network Analysis Report</title>
     <style>
         * {{ margin: 0; padding: 0; box-sizing: border-box; }}
         body {{ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f5f5f5; color: #333; }}
@@ -68,7 +68,7 @@ class ReportGenerator:
 <body>
     <div class="container">
         <header>
-            <h1>🌐 Network Traffic Analysis Report 2026</h1>
+            <h1>🌐 Network Traffic Analysis Report</h1>
             <p>Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}</p>
         </header>
         
@@ -107,7 +107,7 @@ class ReportGenerator:
         html += """
         </table>
         <footer>
-            <p>Network Traffic Monitor 2026 | Advanced packet analysis and monitoring</p>
+            <p>Network Traffic Monitor | Advanced packet analysis and monitoring</p>
         </footer>
     </div>
 </body>

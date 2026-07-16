@@ -1,4 +1,4 @@
-"""Network statistics and traffic analysis (2026 Edition)"""
+"""Network statistics and traffic analysis"""
 
 import logging
 from collections import defaultdict, Counter
@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 class NetworkAnalyzer:
-    """Analyzes network traffic and generates statistics (2026 Edition)"""
+    """Analyzes network traffic and generates statistics"""
     
     def __init__(self) -> None:
         self.packets: List[Tuple[float, Dict[str, Any]]] = []

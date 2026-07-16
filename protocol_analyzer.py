@@ -1,4 +1,4 @@
-"""Protocol detection and packet parsing (2026 Edition)"""
+"""Protocol detection and packet parsing"""
 
 import logging
 from typing import Dict, List, Any, Optional
@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 
 class ProtocolAnalyzer:
-    """Analyzes packets and detects protocols (2026 Edition)"""
+    """Analyzes packets and detects protocols"""
     
     def __init__(self) -> None:
         self.protocol_map: Dict[int, str] = {
@@ -116,7 +116,7 @@ class ProtocolAnalyzer:
         return [flag_map.get(f, f) for f in str(flags) if f in flag_map]
     
     def _detect_app_protocols(self, packet: Any, info: Dict[str, Any]) -> Dict[str, Any]:
-        """Detect application layer protocols (2026 Extended)"""
+        """Detect application layer protocols"""
         app_info: Dict[str, Any] = {}
         
         dst_port = info.get('dst_port')
@@ -127,7 +127,7 @@ class ProtocolAnalyzer:
         
         port = dst_port or src_port
         
-        # Common port mappings (2026 updated)
+        # Common port mappings
         port_protocol_map = {
             20: 'FTP-DATA', 21: 'FTP', 22: 'SSH', 23: 'Telnet',
             25: 'SMTP', 53: 'DNS', 80: 'HTTP', 110: 'POP3',

@@ -1,4 +1,4 @@
-"""Configuration settings for Network Traffic Monitor (2026 Edition)"""
+"""Configuration settings for Network Traffic Monitor"""
 
 import os
 from pathlib import Path
@@ -6,10 +6,10 @@ from typing import Dict, Optional
 
 
 class Config:
-    """Application configuration with 2026 standards"""
+    """Application configuration"""
     
     # Application metadata
-    VERSION = "2026.1.0"
+    VERSION = "1.0.0"
     APP_NAME = "Network Traffic Monitor"
     
     # Network interface settings
@@ -29,7 +29,7 @@ class Config:
     PACKET_BUFFER_SIZE: int = 2000  # Increased for better analysis
     STATS_UPDATE_INTERVAL: int = 5  # seconds
     
-    # Anomaly detection (2026 ML-ready)
+    # Anomaly detection
     ANOMALY_DETECTION: bool = True
     ANOMALY_SENSITIVITY: float = 0.75  # 0.0 to 1.0
     ANOMALY_THRESHOLD: float = 0.8
@@ -61,7 +61,7 @@ class Config:
     MAX_DISPLAY_PACKETS: int = 50
     DASHBOARD_UPDATE_INTERVAL: int = 1  # seconds
     
-    # Protocol tracking (2026 extended)
+    # Protocol tracking
     TRACK_PROTOCOLS: Dict[str, bool] = {
         'TCP': True,
         'UDP': True,
@@ -79,7 +79,7 @@ class Config:
         'CoAP': True,  # IoT
     }
     
-    # Port ranges for common services (2026 updated)
+    # Port ranges for common services
     COMMON_PORTS: Dict[int, str] = {
         20: 'FTP-DATA',
         21: 'FTP',

@@ -1,4 +1,4 @@
-"""Terminal UI dashboard for network monitoring (2026 Edition)"""
+"""Terminal UI dashboard for network monitoring"""
 
 import logging
 from typing import Dict, Any, List, Optional
@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 
 class Dashboard:
-    """Beautiful terminal dashboard for network monitoring (2026 Edition)"""
+    """Beautiful terminal dashboard for network monitoring"""
     
     def __init__(self) -> None:
         self.console = Console()
@@ -20,7 +20,7 @@ class Dashboard:
     
     def display_header(self, interface: Optional[str] = None) -> None:
         """Display initial header"""
-        title = "🌐 NETWORK TRAFFIC MONITOR 2026 🌐"
+        title = "🌐 NETWORK TRAFFIC MONITOR 🌐"
         self.console.print(Panel(title, style="bold cyan", expand=False))
         if interface:
             self.console.print(f"[cyan]Interface:[/cyan] {interface}")

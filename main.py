@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-Network Traffic Monitor - Main Entry Point (2026 Edition)
+Network Traffic Monitor - Main Entry Point
 Captures and analyzes real-time network traffic with anomaly detection
 
-Modern Python implementation with type hints, async support, and advanced monitoring
+Modern Python implementation with type hints and advanced monitoring
 """
 
 import click
@@ -33,7 +33,7 @@ logger = logging.getLogger(__name__)
 
 
 class NetworkMonitor:
-    """Main network monitoring application (2026 Edition)"""
+    """Main network monitoring application"""
     
     def __init__(self, config: Optional[Config] = None) -> None:
         self.config = config or Config()
@@ -198,7 +198,7 @@ class NetworkMonitor:
 def main(interface: Optional[str], filter: Optional[str], dashboard: bool, pcap: Optional[str], 
          analyze: bool, export: Optional[str], anomaly_detection: bool, verbose: bool) -> None:
     """
-    🌐 Network Traffic Monitor 2026 - Real-time packet capture and analysis
+    🌐 Network Traffic Monitor - Real-time packet capture and analysis
     
     Examples:
     

@@ -1,4 +1,4 @@
-"""Alert system for network anomalies (2026 Edition)"""
+"""Alert system for network anomalies"""
 
 import logging
 from datetime import datetime, timedelta
@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 
 class AlertSystem:
-    """Manages and logs alerts with cooldown (2026 Edition)"""
+    """Manages and logs alerts with cooldown"""
     
     def __init__(self, config: Optional[Any] = None) -> None:
         self.config = config

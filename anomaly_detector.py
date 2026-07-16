@@ -1,4 +1,4 @@
-"""Anomaly detection engine (2026 Edition with ML-ready structure)"""
+"""Anomaly detection engine with ML-ready structure"""
 
 import logging
 from collections import deque
@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 class AnomalyDetector:
-    """Detects anomalous network traffic patterns (2026 ML-ready Edition)"""
+    """Detects anomalous network traffic patterns"""
     
     def __init__(self, config: Optional[Any] = None) -> None:
         self.config = config
