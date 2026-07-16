@@ -1,24 +1,26 @@
-"""Protocol detection and packet parsing"""
+"""Protocol detection and packet parsing (2026 Edition)"""
 
-from scapy.all import IP, IPv6, TCP, UDP, ICMP, DNS, ARP, Raw
 import logging
+from typing import Dict, List, Any, Optional
+from scapy.all import IP, IPv6, TCP, UDP, ICMP, DNS, DNSQR, ARP, Raw
 
 logger = logging.getLogger(__name__)
 
 
 class ProtocolAnalyzer:
-    """Analyzes packets and detects protocols"""
+    """Analyzes packets and detects protocols (2026 Edition)"""
     
-    def __init__(self):
-        self.protocol_map = {
+    def __init__(self) -> None:
+        self.protocol_map: Dict[int, str] = {
             6: 'TCP',
             17: 'UDP',
             1: 'ICMP',
+            41: 'IPv6',
         }
     
-    def analyze(self, packet):
+    def analyze(self, packet: Any) -> Dict[str, Any]:
         """Analyze packet and extract protocol information"""
-        info = {
+        info: Dict[str, Any] = {
             'timestamp': float(packet.time),
             'packet_size': len(packet),
             'protocols': [],
@@ -29,24 +31,27 @@ class ProtocolAnalyzer:
             'protocol': 'Unknown',
             'flags': [],
             'payload': None,
+            'metadata': {},
         }
         
-        # IP layer
+        # IP layer (IPv4)
         if IP in packet:
             ip_layer = packet[IP]
             info['src_ip'] = ip_layer.src
             info['dst_ip'] = ip_layer.dst
             info['ttl'] = ip_layer.ttl
             info['length'] = ip_layer.len
+            info['ip_version'] = 4
             info['protocol'] = self.protocol_map.get(ip_layer.proto, 'IP')
             info['protocols'].append('IPv4')
         
-        # IPv6 layer
+        # IP layer (IPv6)
         elif IPv6 in packet:
             ipv6_layer = packet[IPv6]
             info['src_ip'] = ipv6_layer.src
             info['dst_ip'] = ipv6_layer.dst
             info['protocol'] = self.protocol_map.get(ipv6_layer.nxt, 'IPv6')
+            info['ip_version'] = 6
             info['protocols'].append('IPv6')
         
         # TCP layer
@@ -90,12 +95,14 @@ class ProtocolAnalyzer:
         
         # Payload
         if Raw in packet:
-            info['payload'] = packet[Raw].load[:100]  # First 100 bytes
+            payload = packet[Raw].load[:256]  # First 256 bytes
+            info['payload'] = payload
+            info['payload_size'] = len(packet[Raw].load)
         
         return info
     
-    def _parse_tcp_flags(self, flags):
-        """Parse TCP flags"""
+    def _parse_tcp_flags(self, flags: int) -> List[str]:
+        """Parse TCP flags to readable format"""
         flag_map = {
             'F': 'FIN',
             'S': 'SYN',
@@ -106,11 +113,11 @@ class ProtocolAnalyzer:
             'E': 'ECE',
             'C': 'CWR',
         }
-        return [flag_map.get(f, f) for f in str(flags)]
+        return [flag_map.get(f, f) for f in str(flags) if f in flag_map]
     
-    def _detect_app_protocols(self, packet, info):
-        """Detect application layer protocols"""
-        app_info = {}
+    def _detect_app_protocols(self, packet: Any, info: Dict[str, Any]) -> Dict[str, Any]:
+        """Detect application layer protocols (2026 Extended)"""
+        app_info: Dict[str, Any] = {}
         
         dst_port = info.get('dst_port')
         src_port = info.get('src_port')
@@ -120,13 +127,14 @@ class ProtocolAnalyzer:
         
         port = dst_port or src_port
         
-        # Common port mappings
+        # Common port mappings (2026 updated)
         port_protocol_map = {
             20: 'FTP-DATA', 21: 'FTP', 22: 'SSH', 23: 'Telnet',
             25: 'SMTP', 53: 'DNS', 80: 'HTTP', 110: 'POP3',
             143: 'IMAP', 443: 'HTTPS', 445: 'SMB', 3306: 'MySQL',
             5432: 'PostgreSQL', 6379: 'Redis', 27017: 'MongoDB',
-            8080: 'HTTP', 8443: 'HTTPS',
+            8080: 'HTTP', 8443: 'HTTPS', 3389: 'RDP', 5900: 'VNC',
+            1883: 'MQTT', 8883: 'MQTT-TLS', 5683: 'CoAP',
         }
         
         if port in port_protocol_map:
@@ -139,14 +147,19 @@ class ProtocolAnalyzer:
         
         return app_info
     
-    def _parse_dns(self, dns_layer):
+    def _parse_dns(self, dns_layer: Any) -> List[Dict[str, Any]]:
         """Parse DNS queries"""
-        queries = []
-        if dns_layer.qdcount > 0:
-            for i in range(dns_layer.qdcount):
-                q = dns_layer.qd[i]
-                queries.append({
-                    'name': q.qname.decode() if hasattr(q.qname, 'decode') else str(q.qname),
-                    'type': q.qtype,
-                })
+        queries: List[Dict[str, Any]] = []
+        try:
+            if hasattr(dns_layer, 'qdcount') and dns_layer.qdcount > 0:
+                if hasattr(dns_layer, 'qd'):
+                    for i in range(min(dns_layer.qdcount, len(dns_layer.qd))):
+                        q = dns_layer.qd[i]
+                        queries.append({
+                            'name': q.qname.decode('utf-8', errors='ignore') if hasattr(q.qname, 'decode') else str(q.qname),
+                            'type': q.qtype,
+                        })
+        except Exception as e:
+            logger.debug(f"Error parsing DNS: {e}")
+        
         return queries

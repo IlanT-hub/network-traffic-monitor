@@ -1,46 +1,53 @@
-"""Configuration settings for Network Traffic Monitor"""
+"""Configuration settings for Network Traffic Monitor (2026 Edition)"""
 
 import os
 from pathlib import Path
+from typing import Dict, Optional
 
 
 class Config:
-    """Application configuration"""
+    """Application configuration with 2026 standards"""
+    
+    # Application metadata
+    VERSION = "2026.1.0"
+    APP_NAME = "Network Traffic Monitor"
     
     # Network interface settings
-    DEFAULT_INTERFACE = None  # Auto-detect
-    PACKET_COUNT = 0  # 0 = infinite
-    SNAPSHOT_LENGTH = 65535  # Maximum bytes to capture per packet
+    DEFAULT_INTERFACE: Optional[str] = None  # Auto-detect
+    PACKET_COUNT: int = 0  # 0 = infinite
+    SNAPSHOT_LENGTH: int = 65535  # Maximum bytes to capture per packet
     
     # Capture settings
-    TIMEOUT = 1000  # Milliseconds
-    PROMISCUOUS = True  # Capture all packets on network
-    IMMEDIATE_MODE = False
+    TIMEOUT: int = 1000  # Milliseconds
+    PROMISCUOUS: bool = True  # Capture all packets on network
+    IMMEDIATE_MODE: bool = True  # Immediate packet delivery
     
     # Filter settings
-    DEFAULT_FILTER = None
+    DEFAULT_FILTER: Optional[str] = None
     
     # Analysis settings
-    PACKET_BUFFER_SIZE = 1000
-    STATS_UPDATE_INTERVAL = 5  # seconds
+    PACKET_BUFFER_SIZE: int = 2000  # Increased for better analysis
+    STATS_UPDATE_INTERVAL: int = 5  # seconds
     
-    # Anomaly detection
-    ANOMALY_DETECTION = True
-    ANOMALY_SENSITIVITY = 0.75  # 0.0 to 1.0
-    ANOMALY_THRESHOLD = 0.8
+    # Anomaly detection (2026 ML-ready)
+    ANOMALY_DETECTION: bool = True
+    ANOMALY_SENSITIVITY: float = 0.75  # 0.0 to 1.0
+    ANOMALY_THRESHOLD: float = 0.8
+    ENABLE_ML_DETECTION: bool = False  # Future ML-based detection
     
     # DDoS Detection
-    DDOS_DETECTION = False
-    DDOS_PACKET_RATE_THRESHOLD = 1000  # packets per second
-    DDOS_BYTE_RATE_THRESHOLD = 1000000  # bytes per second
+    DDOS_DETECTION: bool = False
+    DDOS_PACKET_RATE_THRESHOLD: int = 1000  # packets per second
+    DDOS_BYTE_RATE_THRESHOLD: int = 1000000  # bytes per second
     
     # Alert settings
-    ALERTS_ENABLED = True
-    ALERT_THRESHOLD = 0.7
+    ALERTS_ENABLED: bool = True
+    ALERT_THRESHOLD: float = 0.7
+    ALERT_COOLDOWN: int = 60  # seconds between similar alerts
     
-    # Geolocation
-    GEOIP_ENABLED = False
-    GEOIP_DB_PATH = None
+    # Geolocation (optional)
+    GEOIP_ENABLED: bool = False
+    GEOIP_DB_PATH: Optional[str] = None
     
     # Data storage
     DATA_DIR = Path(__file__).parent / "data"
@@ -49,12 +56,13 @@ class Config:
     LOGS_DIR = DATA_DIR / "logs"
     
     # Display settings
-    COLORS_ENABLED = True
-    VERBOSE = False
-    MAX_DISPLAY_PACKETS = 20
+    COLORS_ENABLED: bool = True
+    VERBOSE: bool = False
+    MAX_DISPLAY_PACKETS: int = 50
+    DASHBOARD_UPDATE_INTERVAL: int = 1  # seconds
     
-    # Protocol tracking
-    TRACK_PROTOCOLS = {
+    # Protocol tracking (2026 extended)
+    TRACK_PROTOCOLS: Dict[str, bool] = {
         'TCP': True,
         'UDP': True,
         'ICMP': True,
@@ -65,10 +73,14 @@ class Config:
         'FTP': True,
         'SMTP': True,
         'POP3': True,
+        'IMAP': True,
+        'QUIC': True,  # HTTP/3
+        'MQTT': True,  # IoT
+        'CoAP': True,  # IoT
     }
     
-    # Port ranges for common services
-    COMMON_PORTS = {
+    # Port ranges for common services (2026 updated)
+    COMMON_PORTS: Dict[int, str] = {
         20: 'FTP-DATA',
         21: 'FTP',
         22: 'SSH',
@@ -80,31 +92,40 @@ class Config:
         143: 'IMAP',
         443: 'HTTPS',
         445: 'SMB',
+        465: 'SMTPS',
+        587: 'SMTP-TLS',
+        993: 'IMAPS',
+        995: 'POP3S',
         3306: 'MySQL',
         5432: 'PostgreSQL',
         6379: 'Redis',
-        27017: 'MongoDB',
         8080: 'HTTP-ALT',
+        8443: 'HTTPS-ALT',
+        27017: 'MongoDB',
+        3389: 'RDP',
+        5900: 'VNC',
     }
     
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize configuration and create necessary directories"""
         self._create_directories()
         self._load_env_vars()
     
-    def _create_directories(self):
+    def _create_directories(self) -> None:
         """Create necessary data directories"""
-        self.DATA_DIR.mkdir(parents=True, exist_ok=True)
-        self.CAPTURES_DIR.mkdir(parents=True, exist_ok=True)
-        self.REPORTS_DIR.mkdir(parents=True, exist_ok=True)
-        self.LOGS_DIR.mkdir(parents=True, exist_ok=True)
+        for directory in [self.DATA_DIR, self.CAPTURES_DIR, self.REPORTS_DIR, self.LOGS_DIR]:
+            directory.mkdir(parents=True, exist_ok=True)
     
-    def _load_env_vars(self):
+    def _load_env_vars(self) -> None:
         """Load settings from environment variables"""
-        from dotenv import load_dotenv
-        load_dotenv()
+        try:
+            from dotenv import load_dotenv
+            load_dotenv()
+        except ImportError:
+            pass
         
         self.DEFAULT_INTERFACE = os.getenv('DEFAULT_INTERFACE', self.DEFAULT_INTERFACE)
         self.ANOMALY_DETECTION = os.getenv('ANOMALY_DETECTION', 'true').lower() == 'true'
         self.DDOS_DETECTION = os.getenv('DDOS_DETECTION', 'false').lower() == 'true'
         self.VERBOSE = os.getenv('VERBOSE', 'false').lower() == 'true'
+        self.GEOIP_ENABLED = os.getenv('GEOIP_ENABLED', 'false').lower() == 'true'
